@@ -36,7 +36,27 @@ export class MangaController {
         return result;
     }
 
-    @Get(':url')
+    @Get('/thumbnail/:url')
+    async getThumbnail(@Param('url') url: string) {
+        url = decodeURIComponent(url);
+        let promise = new Promise((resolve, reject) => {
+            let thumbnail = 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y';
+            request(url, (error, response, html) => {
+                if (!error && response.statusCode == 200) {
+                    const $ = cheerio.load(html);
+                    thumbnail = $('#manga-page').attr('src');
+                    resolve(thumbnail);
+                } else {
+                    reject(thumbnail);
+                }
+            });
+        });
+
+        let result = await promise;
+        return result;
+    }
+
+    @Get('/chapters/:url')
     async getChapters(@Param('url') url: string) {
         let promise = new Promise((resolve, reject) => {
             let arr = [];
