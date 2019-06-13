@@ -7,69 +7,6 @@ export class MangaController {
     baseUrl = 'https://readms.net';
     baseMangaUrl = 'https://readms.net/manga';
 
-    @Get('/mangas')
-    async getMangas() {
-        let promise = new Promise((resolve, reject) => {
-            let arr = [];
-            request(this.baseMangaUrl, (error, response, html) => {
-                if (!error && response.statusCode == 200) {
-                    const $ = cheerio.load(html);
-                    const mangas = $('.table.table-striped tbody').children('tr');
-
-                    mangas.each((i, e) => {
-                        const manga = $(e);
-                        const anchor = manga.children('td').eq(0).find('a');
-                        const mangaUrl = anchor.attr('href');
-                        const mangaName = anchor.text().replace(/\s\s+/g, '');
-                        if (mangaUrl) {
-                            arr.push({ url: this.baseMangaUrl + mangaUrl, name: mangaName });
-                        }
-                    });
-
-                    resolve(arr);
-                } else {
-                    reject(arr);
-                }
-            });
-        });
-
-        let result = await promise;
-        return result;
-    }
-
-    @Get('/latest')
-    async getLatest() {
-        let promise = new Promise((resolve, reject) => {
-            let arr = [];
-            request(this.baseMangaUrl, (error, response, html) => {
-                if (!error && response.statusCode == 200) {
-                    const $ = cheerio.load(html);
-                    const mangas = $('.new-list').eq(0).children('li');
-
-                    mangas.each((i, e) => {
-                        const manga = $(e);
-                        const anchor = manga.find('a');
-                        const mangaUrl = anchor.attr('href');
-                        const mangaName = anchor.clone().children().remove().end().text().trim().replace(/\s\s+/g, '');
-                        const chapterNumber = anchor.find('strong').text().replace(/\s\s+/g, '');
-                        const chapterName = anchor.find('em').text().replace(/\s\s+/g, '');
-                        const released = anchor.children().eq(0).text().replace(/\s\s+/g, '');
-                        if (mangaUrl) {
-                            arr.push({ url: this.baseUrl + mangaUrl, mangaName, chapterNumber, chapterName, released });
-                        }
-                    });
-
-                    resolve(arr);
-                } else {
-                    reject(arr);
-                }
-            });
-        });
-
-        let result = await promise;
-        return result;
-    }
-
     @Get('/thumbnail/:url')
     async getThumbnail(@Param('url') url: string) {
         url = decodeURIComponent(url);
@@ -104,10 +41,10 @@ export class MangaController {
                         const chapter = $(e);
                         const anchor = chapter.children('td').find('a');
                         const chapterUrl = anchor.attr('href');
-                        const chapterName = anchor.text().replace(/\s\s+/g, '');
-                        const released = chapter.children('td').eq(1).text().replace(/\s\s+/g, '');
+                        const chapterTitle = anchor.text().replace(/\s\s+/g, '');
+                        const releaseDate = chapter.children('td').eq(1).text().replace(/\s\s+/g, '');
                         if (chapterUrl) {
-                            arr.push({ url: chapterUrl, name: chapterName, released: released });
+                            arr.push({ url: chapterUrl, chapterTitle, releaseDate });
                         }
                     });
 
