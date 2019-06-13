@@ -20,12 +20,12 @@ class MangaCron {
                         const manga = $(e);
                         const anchor = manga.find('a');
                         const mangaUrl = anchor.attr('href');
-                        const mangaName = anchor.clone().children().remove().end().text().trim().replace(/\s\s+/g, '');
+                        const mangaTitle = anchor.clone().children().remove().end().text().trim().replace(/\s\s+/g, '');
                         const chapterNumber = anchor.find('strong').text().replace(/\s\s+/g, '');
-                        const chapterName = anchor.find('em').text().replace(/\s\s+/g, '');
-                        const released = anchor.children().eq(0).text().replace(/\s\s+/g, '');
+                        const chapterTitle = anchor.find('em').text().replace(/\s\s+/g, '');
+                        const releaseDate = anchor.children().eq(0).text().replace(/\s\s+/g, '');
                         if (mangaUrl) {
-                            arr.push({ url: baseUrl + mangaUrl, mangaName, chapterNumber, chapterName, released });
+                            arr.push({ url: baseUrl + mangaUrl, mangaTitle, chapterNumber, chapterTitle, releaseDate });
                         }
                     });
 
