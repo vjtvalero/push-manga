@@ -43,7 +43,7 @@ class MangaCron {
     async getMangas() {
         let promise = new Promise((resolve, reject) => {
             let arr = [];
-            request(this.baseMangaUrl, (error, response, html) => {
+            request(baseMangaUrl, (error, response, html) => {
                 if (!error && response.statusCode == 200) {
                     const $ = cheerio.load(html);
                     const mangas = $('.table.table-striped tbody').children('tr');
@@ -54,7 +54,7 @@ class MangaCron {
                         const mangaUrl = anchor.attr('href');
                         const mangaTitle = anchor.text().replace(/\s\s+/g, '');
                         if (mangaUrl) {
-                            arr.push({ url: this.baseMangaUrl + mangaUrl, name: mangaTitle });
+                            arr.push({ url: baseMangaUrl + mangaUrl, mangaTitle });
                         }
                     });
 
